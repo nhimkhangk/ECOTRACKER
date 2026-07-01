@@ -8,7 +8,7 @@
 - pip install celery
 - python manage.py migrate
 - python manage.py runserver
-
+  Enjoy
 
 # Eco Tracker - Nền tảng Mạng xã hội Gamification vì Môi trường
 
