@@ -41,12 +41,53 @@
         <!-- Avatar Form -->
         <form method="post" action="{% url 'update_avatar' %}" enctype="multipart/form-data" class="avatar-form">
             {% csrf_token %}
-            <label style="font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 4px;">Update Profile Picture</label>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <input type="file" name="avatar" accept="image/jpeg,image/png,image/webp" style="flex: 1; padding: 8px; font-size: 13px;">
-                <button type="submit" class="secondary-btn" style="padding: 10px 18px; font-size: 13px;">Save Picture</button>
+            <label style="font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 4px;">
+                {% if current_lang == 'vi' %}Cập nhật ảnh đại diện{% else %}Update Profile Picture{% endif %}
+            </label>
+            <div style="display: flex; gap: 12px; align-items: center; width: 100%;">
+                <div class="custom-avatar-upload" style="position: relative; flex: 1; height: 38px;">
+                    <!-- Hide native input, click passes through to it because of position: absolute and opacity: 0 -->
+                    <input type="file" name="avatar" id="id_avatar" accept="image/jpeg,image/png,image/webp" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; z-index: 2;">
+                    
+                    <!-- Styled visual interface -->
+                    <div class="custom-avatar-trigger" style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; border: 1.5px dashed var(--primary-glow); border-radius: var(--radius-md); background: var(--panel); height: 100%; cursor: pointer; transition: var(--transition); z-index: 1; box-sizing: border-box;">
+                        <span id="avatarFileName" style="font-size: 13px; font-weight: 700; color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;">
+                            {% if current_lang == 'vi' %}Chọn ảnh mới...{% else %}Choose new image...{% endif %}
+                        </span>
+                        <span style="font-size: 15px;">🖼️</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="secondary-btn" style="padding: 0 18px; font-size: 13px; font-weight: 800; border-radius: var(--radius-md); height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box;">
+                    <span>💾</span> {% if current_lang == 'vi' %}Lưu ảnh{% else %}Save Picture{% endif %}
+                </button>
             </div>
         </form>
+
+        <style>
+            .custom-avatar-upload:hover .custom-avatar-trigger {
+                border-color: var(--primary) !important;
+                background: var(--primary-light) !important;
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-sm);
+            }
+        </style>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const avatarInput = document.getElementById('id_avatar');
+                if (avatarInput) {
+                    avatarInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        const nameDisplay = document.getElementById('avatarFileName');
+                        if (file && nameDisplay) {
+                            nameDisplay.textContent = file.name;
+                            nameDisplay.style.color = 'var(--primary)';
+                        }
+                    });
+                }
+            });
+        </script>
 
         <!-- Change Password Link -->
         <div style="margin-top: 20px; border-top: 1.5px solid var(--border); padding-top: 20px; display: flex; gap: 12px;">
